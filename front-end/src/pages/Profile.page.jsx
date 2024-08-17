@@ -52,7 +52,7 @@ export default function Profile() {
           onClick={() => fileRef.current.click()}
           src={formData.avatar || currentUser.avatar}
           alt="profile"
-          className="rounded-full h-30 w-30 object-cover cursor-pointer self-center mt-2"
+          className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
         />
         <p className="text-sm self-center">
           {fileUploadError ? (
@@ -61,7 +61,7 @@ export default function Profile() {
             <span className="text-blue-700">
             {`Uploading ${filePercentage}%`}
               </span>) : filePercentage === 100 ? (
-                <span className="text-green-700">image Sccessfully uploaded</span>) : (
+                <span className="text-green-700">Image Sccessfully uploaded</span>) : (
                   ""
                 )
           }
