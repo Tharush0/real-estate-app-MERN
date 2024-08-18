@@ -18,7 +18,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart())
+      dispatch(signInStart());
       const res = await fetch("/back-end/auth/signin", {
         method: "POST",
         headers: {
@@ -29,11 +29,18 @@ export default function SignIn() {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        dispatch(signInFailure(data.message));
+        dispatch(signInFailure(data.message || "Failed to sign in!!"));
         return;
       }
       dispatch(signInSuccess(data));
-      navigate("/");
+      // Debugging: Log the isAdmin field
+      console.log("User role (isAdmin):", data.isAdmin);
+      // Redirect based on role
+      if (data.isAdmin) {
+        navigate("/admin"); // Navigate to admin page if the user is an admin
+      } else {
+        navigate("/"); // Navigate to home page if the user is a regular user
+      }
     } catch (error) {
       dispatch(signInFailure(error.message));
     }

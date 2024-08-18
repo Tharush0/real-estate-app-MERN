@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { errorHandler } from './error.js';
+import User from '../models/user.model.js';
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies.access_token;
@@ -13,4 +14,21 @@ export const verifyToken = (req, res, next) => {
         next();
     });
 
+};
+export const verifyAdmin = async (req, res, next) => {
+  try {
+    const token = req.cookies.access_token;
+    if (!token) return res.status(401).json("Unauthorized");
+
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(verified.id);
+
+    if (user.role === "admin") {
+      res.status(200).json({ isAdmin: true });
+    } else {
+      res.status(403).json({ isAdmin: false });
+    }
+  } catch (error) {
+    next(error);
+  }
 };
