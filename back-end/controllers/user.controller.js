@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
 import {errorHandler} from '../utils/error.js';
+import Listing from '../models/listing.model.js';
 
 export const test = (req, res) => {
     res.json({
@@ -31,12 +32,25 @@ export const updateUser = async(req, res, next) => {
 };
 
 export const deleteUser = async (req, res, next) => { 
-    if (req.user.id !== req.params.id) return next(errorHandler(401, "you can only delete your own profile"))
+    if (req.user.id === req.params.id) return next(errorHandler(401, "you can only delete your own profile"))
     try {
         await User.findByIdAndDelete(req.params.id);
         res.clearCookie("access_token");
         res.status(200).json('User has been deleted successfully')
     } catch (error) {
         next(error)
+    }
+};
+
+export const getUserListing = async (req, res, next) => { 
+    if (req.user.id !== req.params.id) {
+        try {
+            const listing = await Listing.find({ userRef: req.params.id });
+            res.status(200).json(listing)
+        } catch (error) {
+            next(error)
+        }
+    } else {
+        return next(errorHandler(401, "you can only view your own listing"))
     }
 };
