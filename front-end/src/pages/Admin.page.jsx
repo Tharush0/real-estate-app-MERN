@@ -54,9 +54,9 @@ export default function Admin() {
      console.log(error.message);
    }
  };
-return (
-  <div className="flex flex-col items-center p-4">
-    <div className="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
+  return (
+    <div className="flex flex-col items-center p-4">
+      <div className="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
       <Link to="/create-estate" className="w-full sm:w-64">
         <button className="bg-slate-700 text-white rounded-lg p-4 w-full text-center flex items-center justify-center hover:opacity-90">
           <IoCreateOutline className="mr-2" />

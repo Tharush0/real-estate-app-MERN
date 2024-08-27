@@ -26,11 +26,9 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
-        <Route element={<PrivateRoute adminOnly={true} />}>
           <Route path="/admin" element={<Admin />} />
           <Route path="/create-estate" element={<CreateEstate />} />
           <Route path="/update-estate/:listingId" element={<UpdateEstate />} />
-        </Route>
       </Routes>
     </BrowserRouter>
   );
