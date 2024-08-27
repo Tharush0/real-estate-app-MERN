@@ -1,32 +1,43 @@
-import jwt from 'jsonwebtoken';
-import { errorHandler } from './error.js';
-import User from '../models/user.model.js';
+import jwt from "jsonwebtoken";
+import { errorHandler } from "./error.js";
+import User from "../models/user.model.js";
 
 export const verifyToken = (req, res, next) => {
-    const token = req.cookies.access_token;
+  const token = req.cookies.access_token;
 
-    if (!token) return next(errorHandler(401, 'Unauthorized'));
+  console.log("Received token:", token); // Log token
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return next(errorHandler(403, 'Forbidden'));
+  if (!token)
+    return res.status(401).json({ success: false, message: "Unauthorized" });
 
-        req.user = user;
-        next();
-    });
-
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      console.error("Token verification failed:", err);
+      return res.status(403).json({ success: false, message: "Forbidden" });
+    }
+    req.user = user;
+    next();
+  });
 };
+
 export const verifyAdmin = async (req, res, next) => {
   try {
-    const token = req.cookies.access_token;
-    if (!token) return res.status(401).json("Unauthorized");
+    if (!req.user)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(verified.id);
+    const user = await User.findById(req.user.id);
+
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
     if (user.role === "admin") {
-      res.status(200).json({ isAdmin: true });
+      next();
     } else {
-      res.status(403).json({ isAdmin: false });
+      return res
+        .status(403)
+        .json({ success: false, message: "Forbidden: Admins only" });
     }
   } catch (error) {
     next(error);
