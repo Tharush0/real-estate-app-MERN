@@ -10,6 +10,7 @@ import Admin from "./pages/Admin.page";
 import CreateEstate from "./pages/CreateEstate.page";
 import UpdateEstate from "./pages/UpdateEstate.page";
 import Estate from "./pages/Estate.page";
+import Serach from "./pages/Search.page";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/about" element={<About />} />
         <Route path="/listing/:listingId" element={<Estate />} />
+        <Route path="/search" element={<Serach/>}/>
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
         </Route>
